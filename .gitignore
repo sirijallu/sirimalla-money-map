@@ -1,0 +1,17 @@
+# Dependencies (this project is build-free; nothing is installed, but just in case)
+node_modules/
+
+# Local environment / secrets
+.env
+.env.local
+*.local
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.log
+.cache/
+dist/
+
+# Keep .vscode out of the repo unless we deliberately add shared settings
+.vscode/

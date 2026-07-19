@@ -1,0 +1,20 @@
+{
+  "name": "sirimalla-money-map",
+  "version": "0.1.0",
+  "description": "Personal finance web app that auto-classifies bank, credit-card, loan and EMI transactions into budget categories, with reporting, planning and trend analysis.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "personal-finance",
+    "budget",
+    "transactions",
+    "firebase",
+    "chartjs"
+  ],
+  "author": "Ram Sirimalla",
+  "license": "MIT"
+}

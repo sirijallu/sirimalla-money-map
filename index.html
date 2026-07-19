@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sirimalla Money Map</title>
+  <meta name="description" content="Personal finance dashboard — auto-classify bank, credit-card and loan/EMI spend into budget categories, with reporting, planning and trend analysis." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💸</text></svg>" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-auth="out">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">₹</span>
+      <div class="brand-text">
+        <strong>Sirimalla Money Map</strong>
+        <span id="hdr-meta" class="hdr-meta"></span>
+      </div>
+    </div>
+
+    <div class="chrome" id="app-chrome">
+      <label class="year-picker">
+        <span>Year</span>
+        <select id="year-select" aria-label="Select year"></select>
+      </label>
+      <button id="theme-toggle" class="icon-btn" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
+      <div class="user">
+        <span id="storage-mode" class="chip" title="Storage mode">Local</span>
+        <span id="user-name" class="user-name"></span>
+        <button id="btn-signout" class="btn btn-ghost">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="Sections">
+    <a href="#import" data-view="import">Import</a>
+    <a href="#visualize" data-view="visualize">Visualise</a>
+    <a href="#report" data-view="report">Report</a>
+    <a href="#classify" data-view="classify">Classify</a>
+    <a href="#plan" data-view="plan">Plan</a>
+    <a href="#track" data-view="track">Track</a>
+  </nav>
+
+  <main id="app" hidden>
+    <div id="view" class="view"></div>
+  </main>
+
+  <!-- Signed-out landing -->
+  <section id="signin" class="signin">
+    <div class="signin-card">
+      <span class="logo big">₹</span>
+      <h1>Sirimalla Money Map</h1>
+      <p class="muted">Import your bank, credit-card and loan statements, and it auto-sorts every transaction into budget categories — then reports, plans and tracks your spending across years.</p>
+      <button id="btn-signin" class="btn btn-lg">Continue</button>
+      <p class="signin-note muted small">
+        Running in <strong>local mode</strong> — your data stays in this browser only.
+        Google sign-in &amp; cloud sync switch on once Firebase is configured.
+      </p>
+    </div>
+  </section>
+
+  <div id="toast" class="toast-host" aria-live="polite"></div>
+
+  <footer class="footer muted small">
+    Sirimalla Money Map · local-first · <span id="foot-mode"></span>
+  </footer>
+
+  <!-- Third-party libraries (loaded from CDN, expose window.Chart / window.XLSX) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script defer src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+  <!-- App (ES modules) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
