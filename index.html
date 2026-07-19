@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sirimalla Money Map</title>
+  <title>Sirimalla's Money Map</title>
   <meta name="description" content="Personal finance dashboard — auto-classify bank, credit-card and loan/EMI spend into budget categories, with reporting, planning and trend analysis." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💸</text></svg>" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body data-auth="out">
+<body data-auth="out" data-view="import">
 
   <header class="topbar">
     <div class="brand">
       <span class="logo">$</span>
       <div class="brand-text">
-        <strong>Sirimalla Money Map</strong>
+        <strong>Sirimalla's Money Map</strong>
         <span id="hdr-meta" class="hdr-meta"></span>
       </div>
     </div>
@@ -34,12 +34,12 @@
   </header>
 
   <nav class="tabs" id="tabs" aria-label="Sections">
-    <a href="#import" data-view="import">Import</a>
-    <a href="#visualize" data-view="visualize">Visualise</a>
-    <a href="#report" data-view="report">Report</a>
-    <a href="#classify" data-view="classify">Classify</a>
-    <a href="#plan" data-view="plan">Plan</a>
-    <a href="#track" data-view="track">Track</a>
+    <a href="#import" data-view="import"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg><span>Import</span></a>
+    <a href="#visualize" data-view="visualize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M7 21v-7"/><path d="M12 21V8"/><path d="M17 21v-11"/></svg><span>Visualise</span></a>
+    <a href="#report" data-view="report"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/></svg><span>Report</span></a>
+    <a href="#classify" data-view="classify"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L3 13V3h10l7.59 7.59a2 2 0 0 1 0 2.82z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg><span>Classify</span></a>
+    <a href="#plan" data-view="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg><span>Plan</span></a>
+    <a href="#track" data-view="track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg><span>Track</span></a>
   </nav>
 
   <main id="app" hidden>
@@ -50,7 +50,7 @@
   <section id="signin" class="signin">
     <div class="signin-card">
       <span class="logo big">$</span>
-      <h1>Sirimalla Money Map</h1>
+      <h1>Sirimalla's Money Map</h1>
       <p class="muted">Import your bank, credit-card and loan statements, and it auto-sorts every transaction into budget categories — then reports, plans and tracks your spending across years.</p>
       <button id="btn-signin" class="btn btn-lg">Continue</button>
       <p class="signin-note muted small">
@@ -63,7 +63,7 @@
   <div id="toast" class="toast-host" aria-live="polite"></div>
 
   <footer class="footer muted small">
-    Sirimalla Money Map · local-first · <span id="foot-mode"></span>
+    Sirimalla's Money Map · local-first · <span id="foot-mode"></span>
   </footer>
 
   <!-- Third-party libraries (loaded from CDN, expose window.Chart / window.XLSX) -->

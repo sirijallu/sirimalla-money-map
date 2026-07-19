@@ -107,6 +107,18 @@ build) is the remaining step; pushes to `main` auto-deploy once connected.
 
 ## Change log
 
+### 2026-07-19 — UI redesign + rename (per user request)
+- Rich visual refresh: each tab has its own color + icon (Import = blue,
+  Visualise = violet, Report = green, Classify = amber, Plan = pink,
+  Track = cyan). The active tab drives a per-view accent (`body[data-view]` set
+  in `app.js`) that themes the heading bar, card markers, buttons, focus rings
+  and a soft page glow.
+- Elevated, gradient-tinted stat tiles (semantic in/out coloring via `:has()`),
+  refined cards / tables / buttons, colorful toasts — all light/dark aware.
+- Renamed display name to **"Sirimalla's Money Map"** (repo name unchanged).
+- Files: `css/styles.css` (rewrite), `index.html` (tab icons + name),
+  `js/app.js` (sets `body[data-view]`). Verified via headless render.
+
 ### 2026-07-19 — Localization tweak (post-Increment 1, per user request)
 - Currency switched to **USD** (`en-US`), centralized in `util.js`
   (`formatINR` → `formatMoney`; compact units now `$K` / `$M` / `$B`). Brand mark

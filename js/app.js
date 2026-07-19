@@ -127,6 +127,7 @@ function onHashChange() {
 }
 
 function updateTabs() {
+  document.body.dataset.view = state.activeView; // per-view accent theming (CSS)
   document.querySelectorAll('#tabs a').forEach((a) => {
     a.classList.toggle('active', a.dataset.view === state.activeView);
   });
