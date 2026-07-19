@@ -107,6 +107,17 @@ build) is the remaining step; pushes to `main` auto-deploy once connected.
 
 ## Change log
 
+### 2026-07-19 — Premium UI pass (per user request: higher UI standard + background)
+- Layered "aurora" gradient background (accent-tinted, fixed) + fine SVG grain
+  texture overlay for depth.
+- Glassmorphic surfaces: translucent cards / tiles / topbar / tabs with
+  backdrop-blur, hairline borders, layered soft shadows + a top sheen.
+- Inter typeface (Google Fonts CDN, system fallback); larger tabular numerals,
+  tighter tracking, stronger hierarchy.
+- Premium stat tiles (colored top-accent + corner glow via `:has()`), refined
+  tables / buttons / toasts. Verified light **and** dark via headless render.
+- Files: `css/styles.css` (rewrite), `index.html` (font link).
+
 ### 2026-07-19 — UI redesign + rename (per user request)
 - Rich visual refresh: each tab has its own color + icon (Import = blue,
   Visualise = violet, Report = green, Classify = amber, Plan = pink,
