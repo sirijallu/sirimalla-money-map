@@ -6,7 +6,7 @@
 //
 // Records are in the same shape the importer produces after column detection:
 //   { date, description, amount, flow: 'in' | 'out', account }
-// Amounts are in ₹. Descriptions mimic real Indian bank / credit-card narrations
+// Amounts are in USD. Descriptions mimic real US bank / credit-card narrations
 // so the default keyword rules have something realistic to classify.
 
 function iso(y, m, d) {
@@ -15,37 +15,40 @@ function iso(y, m, d) {
 
 // Recurring items — emitted once per month for every generated month.
 const RECURRING = [
-  { day: 1,  description: 'HDFC BANK SALARY CREDIT CVS HEALTH',   amount: 185000, flow: 'in',  account: 'HDFC Bank' },
-  { day: 3,  description: 'NOBROKER RENT PAYMENT LANDLORD',       amount: 32000,  flow: 'out', account: 'HDFC Bank' },
-  { day: 5,  description: 'HDFC HOME LOAN EMI 0423XXXX',          amount: 41500,  flow: 'out', account: 'HDFC Bank' },
-  { day: 7,  description: 'NETFLIX.COM SUBSCRIPTION',             amount: 649,    flow: 'out', account: 'HDFC Credit Card' },
-  { day: 7,  description: 'SPOTIFY INDIA',                        amount: 119,    flow: 'out', account: 'HDFC Credit Card' },
-  { day: 10, description: 'BESCOM ELECTRICITY BILL BBPS',         amount: 2400,   flow: 'out', account: 'HDFC Bank' },
-  { day: 12, description: 'ACT FIBERNET BROADBAND',               amount: 1180,   flow: 'out', account: 'HDFC Bank' },
-  { day: 15, description: 'LIC OF INDIA INSURANCE PREMIUM',       amount: 6200,   flow: 'out', account: 'HDFC Bank' },
-  { day: 20, description: 'ZERODHA MUTUAL FUND SIP',              amount: 15000,  flow: 'out', account: 'HDFC Bank' },
+  { day: 1,  description: 'DIRECT DEPOSIT PAYROLL',            amount: 6500,   flow: 'in',  account: 'Chase Checking' },
+  { day: 3,  description: 'GREYSTAR APARTMENTS RENT',          amount: 1850,   flow: 'out', account: 'Chase Checking' },
+  { day: 5,  description: 'TOYOTA FINANCIAL SVCS AUTO LOAN',   amount: 465,    flow: 'out', account: 'Chase Checking' },
+  { day: 6,  description: 'SOFI STUDENT LOAN PAYMENT',         amount: 320,    flow: 'out', account: 'Chase Checking' },
+  { day: 7,  description: 'NETFLIX.COM',                       amount: 15.49,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 7,  description: 'SPOTIFY USA',                       amount: 11.99,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 8,  description: 'T-MOBILE WIRELESS',                 amount: 85,     flow: 'out', account: 'Chase Checking' },
+  { day: 10, description: 'PG&E ELECTRIC UTILITY',            amount: 120,    flow: 'out', account: 'Chase Checking' },
+  { day: 12, description: 'COMCAST XFINITY INTERNET',          amount: 79.99,  flow: 'out', account: 'Chase Checking' },
+  { day: 15, description: 'GEICO AUTO INSURANCE',             amount: 142,    flow: 'out', account: 'Chase Checking' },
+  { day: 20, description: 'VANGUARD BROKERAGE INVESTMENT',     amount: 800,    flow: 'out', account: 'Chase Checking' },
 ];
 
 // Variable spends — a rotating subset is emitted each month for variety.
 const VARIABLE = [
-  { day: 2,  description: 'SWIGGY ORDER BANGALORE',            amount: 540,  flow: 'out', account: 'HDFC Credit Card' },
-  { day: 4,  description: 'BIGBASKET.COM GROCERY',            amount: 3260, flow: 'out', account: 'HDFC Credit Card' },
-  { day: 6,  description: 'UBER INDIA TRIP',                  amount: 285,  flow: 'out', account: 'HDFC Credit Card' },
-  { day: 8,  description: 'INDIAN OIL PETROL PUMP',           amount: 2000, flow: 'out', account: 'HDFC Credit Card' },
-  { day: 9,  description: 'AMAZON.IN ORDER',                  amount: 1899, flow: 'out', account: 'HDFC Credit Card' },
-  { day: 11, description: 'ZOMATO ONLINE ORDER',             amount: 720,  flow: 'out', account: 'HDFC Credit Card' },
-  { day: 13, description: 'DMART SUPERMARKET',                amount: 2450, flow: 'out', account: 'HDFC Bank' },
-  { day: 14, description: 'APOLLO PHARMACY',                  amount: 860,  flow: 'out', account: 'HDFC Credit Card' },
-  { day: 16, description: 'FLIPKART INTERNET ORDER',          amount: 3499, flow: 'out', account: 'HDFC Credit Card' },
-  { day: 18, description: 'PVR CINEMAS BOOKMYSHOW',           amount: 900,  flow: 'out', account: 'HDFC Credit Card' },
-  { day: 19, description: 'STARBUCKS COFFEE',                 amount: 430,  flow: 'out', account: 'HDFC Credit Card' },
-  { day: 21, description: 'OLA CABS RIDE',                    amount: 340,  flow: 'out', account: 'HDFC Credit Card' },
-  { day: 22, description: 'MAKEMYTRIP FLIGHT BOOKING',        amount: 8600, flow: 'out', account: 'HDFC Credit Card' },
-  { day: 24, description: 'CROMA ELECTRONICS STORE',          amount: 5400, flow: 'out', account: 'HDFC Credit Card' },
-  { day: 25, description: 'AIRTEL MOBILE RECHARGE',           amount: 399,  flow: 'out', account: 'HDFC Bank' },
-  { day: 26, description: 'MYNTRA FASHION ORDER',             amount: 2299, flow: 'out', account: 'HDFC Credit Card' },
-  { day: 27, description: 'AMAZON.IN REFUND ORDER',           amount: 1899, flow: 'in',  account: 'HDFC Credit Card' },
-  { day: 28, description: 'UDEMY ONLINE COURSE',             amount: 649,  flow: 'out', account: 'HDFC Credit Card' },
+  { day: 2,  description: 'STARBUCKS STORE 1123',          amount: 6.75,   flow: 'out', account: 'Chase Credit Card' },
+  { day: 4,  description: 'WHOLE FOODS MARKET',            amount: 96.30,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 6,  description: 'UBER TRIP HELP.UBER.COM',       amount: 18.50,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 8,  description: 'SHELL OIL 574823',              amount: 48.00,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 9,  description: 'AMAZON.COM ORDER',              amount: 34.99,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 11, description: 'CHIPOTLE MEXICAN GRILL',        amount: 12.40,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 13, description: 'TRADER JOES 445',               amount: 62.15,  flow: 'out', account: 'Chase Checking' },
+  { day: 14, description: 'CVS PHARMACY 08123',            amount: 24.60,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 16, description: 'TARGET T-1857',                 amount: 64.20,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 17, description: 'COSTCO WHOLESALE',              amount: 210.00, flow: 'out', account: 'Chase Credit Card' },
+  { day: 18, description: 'AMC THEATRES ONLINE',           amount: 33.00,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 19, description: 'CHEVRON GAS STATION',           amount: 52.30,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 21, description: 'LYFT RIDE',                     amount: 22.10,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 22, description: 'DELTA AIR LINES',               amount: 340.00, flow: 'out', account: 'Chase Credit Card' },
+  { day: 24, description: 'BEST BUY 00014',                amount: 129.99, flow: 'out', account: 'Chase Credit Card' },
+  { day: 25, description: 'HOME DEPOT 6172',               amount: 88.75,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 26, description: 'WALGREENS STORE 4471',          amount: 18.40,  flow: 'out', account: 'Chase Credit Card' },
+  { day: 27, description: 'AMAZON.COM REFUND',             amount: 34.99,  flow: 'in',  account: 'Chase Credit Card' },
+  { day: 28, description: 'UDEMY ONLINE COURSE',           amount: 19.99,  flow: 'out', account: 'Chase Credit Card' },
 ];
 
 /**

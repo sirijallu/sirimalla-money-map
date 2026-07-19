@@ -4,7 +4,7 @@ import { state, txnsForYear, emitChange } from '../data/state.js';
 import { store } from '../data/store.js';
 import { expenseCategories } from '../classify/categories.js';
 import { totalsByCategory, monthsWithData } from '../analytics.js';
-import { formatINR, escapeHtml, toast } from '../util.js';
+import { formatMoney, escapeHtml, toast } from '../util.js';
 
 let root = null;
 
@@ -35,7 +35,7 @@ export function render(el) {
               const avg = (actualTotals[c.id] || 0) / months;
               return `<tr>
                 <td><span class="badge"><i class="dot" style="background:${c.color}"></i>${escapeHtml(c.name)}</span></td>
-                <td class="num muted">${avg ? formatINR(avg) : '—'}</td>
+                <td class="num muted">${avg ? formatMoney(avg) : '—'}</td>
                 <td class="num">
                   <input class="budget-input" data-cat="${c.id}" type="number" min="0" step="500"
                          value="${budgets[c.id] != null ? budgets[c.id] : ''}" placeholder="0" />
@@ -43,11 +43,11 @@ export function render(el) {
               </tr>`;
             }).join('')}
           </tbody>
-          <tfoot><tr><th>Total planned / month</th><th></th><th class="num" id="plan-total">${formatINR(plannedTotal)}</th></tr></tfoot>
+          <tfoot><tr><th>Total planned / month</th><th></th><th class="num" id="plan-total">${formatMoney(plannedTotal)}</th></tr></tfoot>
         </table>
       </div>
       <div class="row-between" style="margin-top:16px">
-        <span class="muted small">Annual plan: <strong id="plan-annual">${formatINR(plannedTotal * 12)}</strong></span>
+        <span class="muted small">Annual plan: <strong id="plan-annual">${formatMoney(plannedTotal * 12)}</strong></span>
         <button class="btn" id="plan-save">Save budgets</button>
       </div>
     </section>
@@ -61,8 +61,8 @@ function wire() {
   const recalc = () => {
     let total = 0;
     inputs.forEach((i) => (total += Number(i.value) || 0));
-    root.querySelector('#plan-total').textContent = formatINR(total);
-    root.querySelector('#plan-annual').textContent = formatINR(total * 12);
+    root.querySelector('#plan-total').textContent = formatMoney(total);
+    root.querySelector('#plan-annual').textContent = formatMoney(total * 12);
   };
   inputs.forEach((i) => i.addEventListener('input', recalc));
   root.querySelector('#plan-save').addEventListener('click', save);

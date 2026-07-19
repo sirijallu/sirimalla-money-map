@@ -6,7 +6,7 @@ import { store } from '../data/store.js';
 import { classifyAll, learnMapping, merchantKey } from '../classify/classify.js';
 import { DEFAULT_RULES } from '../classify/rules.js';
 import { categoryById } from '../classify/categories.js';
-import { formatINR, escapeHtml, toast } from '../util.js';
+import { formatMoney, escapeHtml, toast } from '../util.js';
 
 let root = null;
 let filter = 'uncategorized'; // 'uncategorized' | 'all'
@@ -88,7 +88,7 @@ function rowHtml(t) {
   return `<tr data-desc="${escapeHtml((t.description || '').toLowerCase())}">
     <td class="nowrap">${escapeHtml(t.date)}</td>
     <td class="desc">${escapeHtml(t.description) || '<span class="muted">—</span>'}</td>
-    <td class="num ${t.flow}">${sign}${formatINR(t.amount)}</td>
+    <td class="num ${t.flow}">${sign}${formatMoney(t.amount)}</td>
     <td><select class="cat-select" data-id="${t.id}" style="border-left:3px solid ${cat.color}">${optionsHtml(t.category)}</select></td>
     <td><span class="src src--${t.categorySource}">${SRC_LABEL[t.categorySource] || t.categorySource}</span></td>
   </tr>`;

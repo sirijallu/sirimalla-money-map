@@ -6,7 +6,7 @@ import { state } from '../data/state.js';
 import { previewFile, previewGoogleLink, previewRecords, commitTransactions } from '../import/import.js';
 import { generateSampleRecords } from '../data/sample-data.js';
 import { categoryById } from '../classify/categories.js';
-import { formatINR, escapeHtml, toast } from '../util.js';
+import { formatMoney, escapeHtml, toast } from '../util.js';
 
 let pending = null;     // classified preview, not yet committed
 let root = null;
@@ -168,7 +168,7 @@ function renderPreview() {
       <div class="preview-head">
         <div>
           <h3>Preview — ${pending.length} transaction${pending.length === 1 ? '' : 's'}</h3>
-          <p class="muted small">${auto}/${pending.length} auto-classified · ${inCount} money-in · ${formatINR(outSum)} total spend</p>
+          <p class="muted small">${auto}/${pending.length} auto-classified · ${inCount} money-in · ${formatMoney(outSum)} total spend</p>
         </div>
         <div class="preview-actions">
           <button class="btn btn-secondary" id="pv-discard">Discard</button>
@@ -198,7 +198,7 @@ function rowHtml(t) {
     <td class="nowrap">${escapeHtml(t.date)}</td>
     <td class="desc">${escapeHtml(t.description) || '<span class="muted">—</span>'}</td>
     <td class="nowrap muted">${escapeHtml(t.account)}</td>
-    <td class="num ${t.flow}">${sign}${formatINR(t.amount)}</td>
+    <td class="num ${t.flow}">${sign}${formatMoney(t.amount)}</td>
     <td><span class="badge"><i class="dot" style="background:${cat.color}"></i>${escapeHtml(cat.name)}</span></td>
   </tr>`;
 }

@@ -46,7 +46,10 @@ export function txnsForYear(year = state.year) {
 
 /** Distinct years present in the data, always including the current year. */
 export function availableYears() {
-  const years = new Set(state.transactions.map((t) => t.year));
-  years.add(new Date().getFullYear());
-  return [...years].sort((a, b) => b - a);
+  const current = new Date().getFullYear();
+  // Always offer the dropdown back to 2020 (or earlier if data predates it).
+  const earliest = Math.min(2020, current, ...state.transactions.map((t) => t.year));
+  const years = [];
+  for (let y = current; y >= earliest; y--) years.push(y);
+  return years;
 }

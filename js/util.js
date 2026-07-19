@@ -1,23 +1,27 @@
 // Small shared utilities: currency formatting, escaping, DOM + toast helpers.
 
-const INR = new Intl.NumberFormat('en-IN', {
+// Currency is centralized here — change LOCALE + CURRENCY to switch currency
+// app-wide, and update formatCompact's symbol/units below to match.
+const LOCALE = 'en-US';
+const CURRENCY = 'USD';
+const money = new Intl.NumberFormat(LOCALE, {
   style: 'currency',
-  currency: 'INR',
+  currency: CURRENCY,
   maximumFractionDigits: 0,
 });
 
-export function formatINR(n) {
-  return INR.format(Math.round(Number(n) || 0));
+export function formatMoney(n) {
+  return money.format(Math.round(Number(n) || 0));
 }
 
-/** Compact ₹ for tight spaces: ₹1.2L, ₹3.4Cr, ₹9.9k. */
+/** Compact $ for tight spaces: $1.2K, $3.4M, $1.1B. */
 export function formatCompact(n) {
   const v = Number(n) || 0;
   const a = Math.abs(v);
-  if (a >= 1e7) return `₹${(v / 1e7).toFixed(2)}Cr`;
-  if (a >= 1e5) return `₹${(v / 1e5).toFixed(2)}L`;
-  if (a >= 1e3) return `₹${(v / 1e3).toFixed(1)}k`;
-  return `₹${Math.round(v)}`;
+  if (a >= 1e9) return `$${(v / 1e9).toFixed(2)}B`;
+  if (a >= 1e6) return `$${(v / 1e6).toFixed(2)}M`;
+  if (a >= 1e3) return `$${(v / 1e3).toFixed(1)}K`;
+  return `$${Math.round(v)}`;
 }
 
 export function escapeHtml(s) {

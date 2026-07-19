@@ -3,7 +3,7 @@
 import { state, txnsForYear } from '../data/state.js';
 import { summary, monthlySpend, monthlyIncome, categoryBreakdown } from '../analytics.js';
 import { barChart, doughnutChart, lineChart, chartsReady } from '../charts.js';
-import { formatINR, MONTH_NAMES, escapeHtml } from '../util.js';
+import { formatMoney, MONTH_NAMES, escapeHtml } from '../util.js';
 
 export function render(el) {
   const year = state.year;
@@ -29,10 +29,10 @@ export function render(el) {
     </div>
 
     <div class="tiles">
-      ${tile('Total spend', formatINR(s.totalSpend), 'out')}
-      ${tile('Total income', formatINR(s.totalIncome), 'in')}
-      ${tile('Net', (s.net >= 0 ? '+' : '−') + formatINR(Math.abs(s.net)), s.net >= 0 ? 'in' : 'out')}
-      ${tile('Top category', s.topCategory ? escapeHtml(s.topCategory.name) : '—', 'neutral', s.topCategory ? formatINR(s.topCategory.total) : '')}
+      ${tile('Total spend', formatMoney(s.totalSpend), 'out')}
+      ${tile('Total income', formatMoney(s.totalIncome), 'in')}
+      ${tile('Net', (s.net >= 0 ? '+' : '−') + formatMoney(Math.abs(s.net)), s.net >= 0 ? 'in' : 'out')}
+      ${tile('Top category', s.topCategory ? escapeHtml(s.topCategory.name) : '—', 'neutral', s.topCategory ? formatMoney(s.topCategory.total) : '')}
     </div>
 
     <div class="grid grid-2">

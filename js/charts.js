@@ -4,7 +4,7 @@
 // helper destroys any prior chart on the same canvas before drawing, so views
 // can re-render freely without leaking chart instances.
 
-import { formatCompact, formatINR } from './util.js';
+import { formatCompact, formatMoney } from './util.js';
 
 const instances = new Map(); // canvasId -> Chart
 
@@ -61,7 +61,7 @@ const legend = (display = true) => {
 
 const moneyTooltip = {
   callbacks: {
-    label: (ctx) => `${ctx.dataset.label ? ctx.dataset.label + ': ' : ''}${formatINR(ctx.parsed.y ?? ctx.parsed)}`,
+    label: (ctx) => `${ctx.dataset.label ? ctx.dataset.label + ': ' : ''}${formatMoney(ctx.parsed.y ?? ctx.parsed)}`,
   },
 };
 
@@ -113,7 +113,7 @@ export function doughnutChart(canvasId, { labels, data, colors }) {
       plugins: {
         legend: { position: 'right', labels: { color: c.text, boxWidth: 12, usePointStyle: true, padding: 12 } },
         tooltip: {
-          callbacks: { label: (ctx) => `${ctx.label}: ${formatINR(ctx.parsed)}` },
+          callbacks: { label: (ctx) => `${ctx.label}: ${formatMoney(ctx.parsed)}` },
         },
       },
     },

@@ -3,7 +3,7 @@
 import { state, txnsForYear } from '../data/state.js';
 import { categoryBreakdown, monthlyByCategory, monthlySpend } from '../analytics.js';
 import { categoryById } from '../classify/categories.js';
-import { formatINR, MONTH_NAMES, escapeHtml } from '../util.js';
+import { formatMoney, MONTH_NAMES, escapeHtml } from '../util.js';
 
 export function render(el) {
   const year = state.year;
@@ -28,7 +28,7 @@ export function render(el) {
   el.innerHTML = `
     <div class="view-head">
       <h2>Report · ${year}</h2>
-      <p class="muted">Total spend ${formatINR(grand)} across ${breakdown.length} categories.</p>
+      <p class="muted">Total spend ${formatMoney(grand)} across ${breakdown.length} categories.</p>
     </div>
 
     <section class="card">
@@ -40,16 +40,16 @@ export function render(el) {
             ${breakdown.map((c) => `
               <tr>
                 <td><span class="badge"><i class="dot" style="background:${c.color}"></i>${escapeHtml(c.name)}</span></td>
-                <td class="num">${formatINR(c.total)}</td>
+                <td class="num">${formatMoney(c.total)}</td>
                 <td class="num">
                   <div class="share"><span class="share-bar" style="width:${c.pct.toFixed(1)}%;background:${c.color}"></span></div>
                   <span class="share-pct">${c.pct.toFixed(1)}%</span>
                 </td>
                 <td class="num">${c.count}</td>
-                <td class="num">${formatINR(c.avg)}</td>
+                <td class="num">${formatMoney(c.avg)}</td>
               </tr>`).join('')}
           </tbody>
-          <tfoot><tr><th>Total</th><th class="num">${formatINR(grand)}</th><th class="num">100%</th><th class="num">${txns.length}</th><th></th></tr></tfoot>
+          <tfoot><tr><th>Total</th><th class="num">${formatMoney(grand)}</th><th class="num">100%</th><th class="num">${txns.length}</th><th></th></tr></tfoot>
         </table>
       </div>
     </section>
@@ -63,11 +63,11 @@ export function render(el) {
             ${matrixRows.map((r) => `
               <tr>
                 <td><span class="badge"><i class="dot" style="background:${r.cat.color}"></i>${escapeHtml(r.cat.name)}</span></td>
-                ${r.months.map((v) => `<td class="num ${v ? '' : 'zero'}">${v ? formatINR(v) : '·'}</td>`).join('')}
-                <td class="num strong">${formatINR(r.total)}</td>
+                ${r.months.map((v) => `<td class="num ${v ? '' : 'zero'}">${v ? formatMoney(v) : '·'}</td>`).join('')}
+                <td class="num strong">${formatMoney(r.total)}</td>
               </tr>`).join('')}
           </tbody>
-          <tfoot><tr><th>Total</th>${monthTotals.map((v) => `<th class="num">${v ? formatINR(v) : '·'}</th>`).join('')}<th class="num">${formatINR(grand)}</th></tr></tfoot>
+          <tfoot><tr><th>Total</th>${monthTotals.map((v) => `<th class="num">${v ? formatMoney(v) : '·'}</th>`).join('')}<th class="num">${formatMoney(grand)}</th></tr></tfoot>
         </table>
       </div>
     </section>

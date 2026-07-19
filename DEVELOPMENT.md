@@ -10,6 +10,11 @@ increment by increment. Update the **Change log** at the bottom each session.
 The app runs end-to-end in **local-first** mode: import → auto-classify →
 visualise → report → plan → track, with a year selector across all tabs.
 
+**Repo:** `github.com/sirijallu/sirimalla-money-map` — `main` @ commit `91ca816`,
+pushed 2026-07-19.
+**Deploy:** Vercel not connected yet — dashboard import (framework **Other**, no
+build) is the remaining step; pushes to `main` auto-deploy once connected.
+
 ### What works today
 
 | Area | State | Notes |
@@ -102,6 +107,17 @@ visualise → report → plan → track, with a year selector across all tabs.
 
 ## Change log
 
+### 2026-07-19 — Localization tweak (post-Increment 1, per user request)
+- Currency switched to **USD** (`en-US`), centralized in `util.js`
+  (`formatINR` → `formatMoney`; compact units now `$K` / `$M` / `$B`). Brand mark
+  `₹` → `$`.
+- Sample data + default keyword rules re-based to **US merchants** with realistic
+  USD amounts. Fixed a substring collision — `"macy"` lives inside `"pharmacy"`,
+  so CVS Pharmacy was matching the Macy's rule (now `"macys"` / `"lowes"`).
+- **Year selector** now always spans the current year back to **2020**
+  (`availableYears` in `state.js`), independent of imported data.
+- Verified via Node pipeline test + headless-Chrome render. Committed + pushed to `main`.
+
 ### 2026-07-19 — Increment 1: foundation + vertical slice
 - Scaffolded project (build-free ES modules, zero-dep dev server, Vercel config).
 - Storage + auth abstractions (local-first, Firebase-ready).
@@ -110,3 +126,5 @@ visualise → report → plan → track, with a year selector across all tabs.
   PDF stub, classified preview + commit with dedupe.
 - Six views (Import, Visualise, Report, Classify, Plan, Track) + charts.
 - Verified via Node pipeline tests + headless-Chrome full-boot render.
+- Committed to `main` (91ca816) and **pushed to github.com/sirijallu/sirimalla-money-map**.
+  Remaining to go live: connect Vercel (dashboard import, framework Other).

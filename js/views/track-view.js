@@ -3,7 +3,7 @@
 import { state, txnsForYear } from '../data/state.js';
 import { categoryById } from '../classify/categories.js';
 import { totalsByCategory, monthsWithData } from '../analytics.js';
-import { formatINR, escapeHtml } from '../util.js';
+import { formatMoney, escapeHtml } from '../util.js';
 
 export function render(el) {
   const year = state.year;
@@ -42,9 +42,9 @@ export function render(el) {
     </div>
 
     <div class="tiles">
-      ${tile('Budget / month', formatINR(totalBudget), 'neutral')}
-      ${tile('Actual pace / month', formatINR(totalActual), totalActual > totalBudget ? 'out' : 'in')}
-      ${tile('Headroom / month', (totalBudget - totalActual >= 0 ? '+' : '−') + formatINR(Math.abs(totalBudget - totalActual)), totalBudget - totalActual >= 0 ? 'in' : 'out')}
+      ${tile('Budget / month', formatMoney(totalBudget), 'neutral')}
+      ${tile('Actual pace / month', formatMoney(totalActual), totalActual > totalBudget ? 'out' : 'in')}
+      ${tile('Headroom / month', (totalBudget - totalActual >= 0 ? '+' : '−') + formatMoney(Math.abs(totalBudget - totalActual)), totalBudget - totalActual >= 0 ? 'in' : 'out')}
     </div>
 
     <section class="card">
@@ -62,7 +62,7 @@ function barRow(r) {
   return `<div class="track-row">
     <div class="track-top">
       <span class="badge"><i class="dot" style="background:${r.cat.color}"></i>${escapeHtml(r.cat.name)}</span>
-      <span class="track-nums">${formatINR(r.avgActual)} <span class="muted">/ ${r.budget ? formatINR(r.budget) : '—'}</span> ${status}</span>
+      <span class="track-nums">${formatMoney(r.avgActual)} <span class="muted">/ ${r.budget ? formatMoney(r.budget) : '—'}</span> ${status}</span>
     </div>
     <div class="track-bar"><span class="track-fill ${over ? 'over' : ''}" style="width:${width}%;background:${over ? '' : r.cat.color}"></span></div>
   </div>`;
