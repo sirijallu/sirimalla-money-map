@@ -6,6 +6,7 @@ import { state, subscribe, emitChange, availableYears } from './data/state.js';
 import { store } from './data/store.js';
 import { DEFAULT_CATEGORIES } from './classify/categories.js';
 import { qs, toast } from './util.js';
+import { maybeMigrateLocalToCloud } from './data/migrate.js';
 
 import * as importView from './views/import-view.js';
 import * as visualizeView from './views/visualize-view.js';
@@ -27,6 +28,7 @@ const VIEWS = {
 function boot() {
   applyStoredTheme();
   wireChrome();
+  updateSigninUi();
   subscribe(onStateChange);
   auth.onChange(onUser);
   auth.init();
@@ -46,6 +48,14 @@ async function onUser(user) {
 }
 
 async function loadUserData(user) {
+  if (store.usingCloud) {
+    try {
+      const moved = await maybeMigrateLocalToCloud(user.uid);
+      if (moved) toast('Moved your on-device data to the cloud.', 'success');
+    } catch (e) {
+      console.error('Local→cloud migration skipped:', e);
+    }
+  }
   const [txns, cats, rules, mappings, budgets] = await Promise.all([
     store.getTransactions(user.uid),
     store.getCategories(user.uid),
@@ -68,8 +78,14 @@ async function loadUserData(user) {
 
 // ---- chrome (header, tabs, year, theme) ------------------------------------
 function wireChrome() {
-  qs('#btn-signin')?.addEventListener('click', () => auth.signIn());
-  qs('#btn-signout')?.addEventListener('click', () => auth.signOut());
+  qs('#btn-signin')?.addEventListener('click', async () => {
+    try { await auth.signIn(); }
+    catch (e) { console.error(e); toast(authError(e), 'error'); }
+  });
+  qs('#btn-signout')?.addEventListener('click', async () => {
+    try { await auth.signOut(); }
+    catch (e) { console.error(e); }
+  });
   qs('#theme-toggle')?.addEventListener('click', toggleTheme);
 
   qs('#year-select')?.addEventListener('change', (e) => {
@@ -157,6 +173,23 @@ function toggleTheme() {
   document.documentElement.dataset.theme = next;
   localStorage.setItem('smm:theme', next);
   emitChange(); // redraw charts for new theme
+}
+
+function updateSigninUi() {
+  if (!auth.cloudConfigured) return;
+  const btn = qs('#btn-signin');
+  const note = qs('#signin-note');
+  if (btn) btn.textContent = 'Continue with Google';
+  if (note) note.innerHTML = 'Sign in with your Google account — your data syncs privately to Firestore and follows you across devices.';
+}
+
+function authError(e) {
+  const code = (e && e.code) || '';
+  if (code.includes('popup-closed') || code.includes('cancelled-popup')) return 'Sign-in cancelled.';
+  if (code.includes('popup-blocked')) return 'Your browser blocked the sign-in popup — allow popups and retry.';
+  if (code.includes('unauthorized-domain')) return 'This domain isn’t authorized in Firebase → Authentication → Settings → Authorized domains yet.';
+  if (code.includes('network')) return 'Network error reaching Firebase. Check your connection.';
+  return 'Sign-in failed: ' + ((e && e.message) || e);
 }
 
 boot();

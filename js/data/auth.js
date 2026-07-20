@@ -1,14 +1,13 @@
 // Authentication abstraction.
 // -----------------------------------------------------------------------------
-// Local-first mode (default): a single on-device profile, no password, so you
-// can use the app right away. Data stays in this browser.
-//
-// Firebase mode (once js/config/firebase-config.js is filled and a Firebase
-// auth backend is wired): real Google sign-in. The user shape below
-// ({ uid, name, email, photoURL }) is identical in both modes, so no caller
-// needs to change when we switch.
+// Two backends, selected automatically by whether Firebase is configured:
+//   • local    — a single on-device profile, no password (default, offline)
+//   • firebase — real Google sign-in (popup), session persisted by Firebase
+// Both expose the same user shape { uid, name, email, photoURL }, so nothing
+// downstream changes when you switch.
 
 import { isFirebaseConfigured } from '../config/firebase-config.js';
+import { getFirebase } from './firebase.js';
 
 const LS_KEY = 'smm:auth:localUser';
 const listeners = new Set();
@@ -44,12 +43,40 @@ const localAuth = {
   },
 };
 
-// Firebase auth backend will replace this once wired.
-const backend = localAuth;
+// ---- firebase backend -------------------------------------------------------
+const firebaseAuth = {
+  async init() {
+    try {
+      const fb = await getFirebase();
+      fb.authMod.onAuthStateChanged(fb.auth, (u) => {
+        current = u
+          ? { uid: u.uid, name: u.displayName || u.email || 'You', email: u.email || '', photoURL: u.photoURL || '', local: false }
+          : null;
+        inited = true;
+        notify();
+      });
+    } catch (err) {
+      console.error('Firebase init failed; check config + network:', err);
+      inited = true;
+      current = null;
+      notify();
+    }
+  },
+  async signIn() {
+    const fb = await getFirebase();
+    const provider = new fb.authMod.GoogleAuthProvider();
+    await fb.authMod.signInWithPopup(fb.auth, provider); // onAuthStateChanged then fires
+  },
+  async signOut() {
+    const fb = await getFirebase();
+    await fb.authMod.signOut(fb.auth);
+  },
+};
+
+const backend = isFirebaseConfigured ? firebaseAuth : localAuth;
 
 export const auth = {
-  // 'local' until a real Firebase auth backend is active.
-  mode: 'local',
+  mode: isFirebaseConfigured ? 'firebase' : 'local',
   cloudConfigured: isFirebaseConfigured,
 
   get currentUser() {

@@ -8,6 +8,9 @@
 // same { read, write } contract and `backend` below will point at it whenever
 // the user is signed in with a real cloud account.
 
+import { isFirebaseConfigured } from '../config/firebase-config.js';
+import { firestoreBackend } from './firestore.js';
+
 const NS = 'smm';
 
 function key(uid, name) {
@@ -34,11 +37,11 @@ const localBackend = {
   },
 };
 
-// Firestore backend will be assigned here once implemented + configured.
-const backend = localBackend;
+// Firestore when configured, else localStorage — same async contract for both.
+const backend = isFirebaseConfigured ? firestoreBackend : localBackend;
 
 export const store = {
-  usingCloud: backend !== localBackend,
+  usingCloud: isFirebaseConfigured,
 
   getTransactions: (uid) => backend.read(uid, 'transactions', []),
   saveTransactions: (uid, txns) => backend.write(uid, 'transactions', txns),

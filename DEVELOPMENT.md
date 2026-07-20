@@ -37,8 +37,9 @@ build) is the remaining step; pushes to `main` auto-deploy once connected.
 ### Stubbed / not yet wired (next increments)
 
 - **PDF import** — `import/parsers.js#parsePdf` throws a clear message. Needs pdf.js.
-- **Firebase Auth + Firestore** — config placeholder + abstractions exist; the
-  actual backends aren't wired yet, so everything is local to the browser.
+- **Firebase Auth + Firestore** — ✅ **implemented (Increment 2)**. Activates when
+  you fill `js/config/firebase-config.js`; see `FIREBASE_SETUP.md`. Local mode
+  stays the default until then.
 - **Google Drive private files** — only public/published links fetch client-side
   (CORS). A serverless proxy would unlock "anyone with the link" private files.
 
@@ -55,13 +56,14 @@ build) is the remaining step; pushes to `main` auto-deploy once connected.
 
 ## Roadmap (proposed order)
 
-**Increment 2 — Firebase backend**
-- `data/firebase.js` (init from config), `data/firebase-auth.js` (Google popup),
-  `data/firestore.js` (implements the `store` read/write contract).
-- Flip `store`/`auth` backends when `isFirebaseConfigured` + signed in.
-- Firestore layout: `users/{uid}/transactions`, `/rules`, `/mappings`,
-  `/budgets`, `/meta`. Security rules: a user can read/write only their own docs.
-- One-time localStorage → Firestore migration on first cloud sign-in.
+**Increment 2 — Firebase backend ✅ (2026-07-19, code-complete; activates on config)**
+- `data/firebase.js` (lazy SDK load via dynamic import), Google-popup backend in
+  `auth.js`, `data/firestore.js` (`users/{uid}/state/{collection}` docs),
+  `data/migrate.js` (safe local→cloud copy). `store`/`auth` flip on
+  `isFirebaseConfigured`.
+- `firestore.rules` (own-subtree only) + `FIREBASE_SETUP.md` shipped.
+- **Next scaling step:** split transactions into a per-doc subcollection to get
+  past the ~1 MiB/document limit (currently one doc per collection).
 
 **Increment 3 — PDF import**
 - pdf.js text extraction + line/column heuristics → rows → existing normalizer.
@@ -106,6 +108,20 @@ build) is the remaining step; pushes to `main` auto-deploy once connected.
 ---
 
 ## Change log
+
+### 2026-07-19 — Increment 2: Firebase Auth (Google) + Firestore
+- Lazy Firebase SDK — dynamic `import()` of the gstatic ESM build, only when
+  `js/config/firebase-config.js` is filled (local mode loads no Firebase code).
+- Google sign-in popup backend in `auth.js`; Firestore `{read,write}` backend
+  (`users/{uid}/state/{collection}` docs) selected by config in `store.js`.
+- Safe one-time local→cloud migration (`migrate.js`); "Continue with Google"
+  button/note + popup error handling in `app.js`.
+- `firestore.rules` (each user restricted to their own subtree) + `FIREBASE_SETUP.md`.
+- Verified: all JS parses; local-first mode unchanged (no SDK loads, app boots +
+  renders); wiring flips correctly on config. Real Google/Firestore round-trip
+  needs a user-created Firebase project (see FIREBASE_SETUP.md).
+- Files: `js/data/{firebase,firestore,migrate}.js` (new); `auth.js`, `store.js`,
+  `app.js`, `index.html` (wiring); `firestore.rules`, `FIREBASE_SETUP.md` (new).
 
 ### 2026-07-19 — Premium UI pass (per user request: higher UI standard + background)
 - Layered "aurora" gradient background (accent-tinted, fixed) + fine SVG grain

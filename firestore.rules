@@ -1,0 +1,12 @@
+rules_version = '2';
+
+// Security rules for Sirimalla's Money Map.
+// Each signed-in user may read/write ONLY their own document subtree
+// (users/{their-uid}/...). Everything else is denied.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

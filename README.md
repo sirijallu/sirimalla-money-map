@@ -41,8 +41,8 @@ populate ~2 years of realistic transactions and explore every tab.
 | Charts | Chart.js 4 (line, bar, doughnut) — via CDN |
 | Spreadsheet parsing | SheetJS (xlsx) — reads Excel/CSV/TSV/ODS — via CDN |
 | PDF statements | _stub_ — pdf.js planned (see DEVELOPMENT.md) |
-| Auth | Firebase Auth (Google Sign-In) — _local fallback active until configured_ |
-| Database | Firebase Firestore (per-user sub-collections) — _localStorage fallback active_ |
+| Auth | Firebase Auth (Google Sign-In) — **wired**; local fallback until you add config |
+| Database | Firebase Firestore (per-user subcollections) — **wired**; localStorage fallback until you add config |
 | External import | Google Drive / Sheets public-link fetch |
 | Hosting | Vercel static hosting, CI/CD from Git |
 
@@ -115,9 +115,11 @@ Google sign-in and cross-device sync:
 6. **Authentication → Settings → Authorized domains →** add `localhost` and your
    `*.vercel.app` domain.
 
-The Firebase _wiring_ (auth backend + Firestore store backend) lands in the next
-increment; the storage/auth layers are already abstracted so it's a drop-in.
-(Firebase web config is not secret — it's designed to ship to the browser.)
+Full step-by-step: **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)** (includes the
+Firestore security rules and the authorized-domains step). The auth + Firestore
+backends are already wired — filling the config is all that's needed, and local
+mode stays the default until then. (Firebase web config is not secret — it ships
+to the browser; access is controlled by [`firestore.rules`](firestore.rules).)
 
 ## Deploy to Vercel
 
